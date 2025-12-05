@@ -21,8 +21,18 @@
     border-radius: 24px;
     padding: 2.25rem 2.5rem;
     box-shadow: 0 24px 80px rgba(15, 23, 42, 0.22);
+    background: linear-gradient(-45deg, #e6ebc7, #ead6cc, #cbf1e9, #d9b2b0);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+
   }
   
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   /* Titles */
   .auth-title {
     font-size: 1.5rem;
