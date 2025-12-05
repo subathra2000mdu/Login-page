@@ -1,0 +1,125 @@
+/* Full page layout */
+.login-page {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(-45deg, #1d2671, #c33764, #0f2027, #203a43);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+  }
+  
+  /* Center wrapper */
+  .login-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 420px;
+    padding: 1rem;
+  }
+  
+  /* Card */
+  .login-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    backdrop-filter: blur(8px);
+  }
+  
+  .login-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #222;
+    font-weight: 600;
+  }
+  
+  /* Error */
+  .error-text {
+    color: #d9534f;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+  
+  /* Background animated blobs */
+  .bg-anime {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .bg-anime span {
+    position: absolute;
+    display: block;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(4px);
+    animation: float 12s linear infinite;
+  }
+  
+  /* Different positions for each blob */
+  .bg-anime span:nth-child(1) {
+    top: -60px;
+    left: -40px;
+  }
+  
+  .bg-anime span:nth-child(2) {
+    top: 20%;
+    right: -80px;
+    animation-duration: 18s;
+  }
+  
+  .bg-anime span:nth-child(3) {
+    bottom: -80px;
+    left: 10%;
+    animation-duration: 16s;
+  }
+  
+  .bg-anime span:nth-child(4) {
+    bottom: 10%;
+    right: 15%;
+    animation-duration: 20s;
+  }
+  
+  /* Background gradient animation */
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  /* Floating animation */
+  @keyframes float {
+    0% {
+      transform: translateY(0) translateX(0);
+      opacity: 0.7;
+    }
+    50% {
+      transform: translateY(-40px) translateX(20px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0) translateX(0);
+      opacity: 0.7;
+    }
+  }
+  
+  /* Small screen tweaks */
+  @media (max-width: 576px) {
+    .login-card {
+      padding: 1.5rem;
+    }
+  }
+  
