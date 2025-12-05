@@ -24,6 +24,7 @@
     background: linear-gradient(-45deg, #e6ebc7, #ead6cc, #cbf1e9, #d9b2b0);
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
+    background-color: #111827;
 
   }
   
