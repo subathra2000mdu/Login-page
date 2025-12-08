@@ -1,6 +1,6 @@
-// src/Register.jsx
+// src/frontend/Register.jsx
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -10,15 +10,17 @@ const Register = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
+    // basic validation
     if (!form.name.trim() || !form.email.trim() || !form.password.trim()) {
       setError("Please fill in all fields.");
       return;
@@ -30,17 +32,41 @@ const Register = () => {
     }
 
     setError("");
-    console.log("Register data:", form);
-    // TODO: call register API here
+
+    try {
+      const res = await fetch("http://localhost:4000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // so cookies (JWT) are saved
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const data = await res.json();
+      console.log("Register result:", data);
+
+      if (!data.success) {
+        setError(data.message || "Something went wrong.");
+        return;
+      }
+
+      // success – go to login page
+      alert("Account created successfully!");
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+      setError("Network error. Please try again.");
+    }
   }
 
   return (
     <div className="auth-page">
       <div className="auth-card">
         <h2 className="auth-title">Create your account</h2>
-        <p className="auth-subtitle">
-          Sign up to get started with our app
-        </p>
+        <p className="auth-subtitle">Sign up to get started with our app</p>
 
         {error && <p className="auth-error">{error}</p>}
 
