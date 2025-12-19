@@ -1,51 +1,45 @@
-import mongoose from 'mongoose';
+// Server/models/userModel.js
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-
-    name:{
-        type: String,
-        required: true,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    
-    email:{
-        type: String,
-        required: true,
-        unique: true,
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
     },
 
     password: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
 
-    verifyOtp:{
-        type: String,
-        default: '',
+    // jobseeker | employer
+    role: {
+      type: String,
+      enum: ["jobseeker", "employer"],
+      default: "jobseeker",
     },
 
-    verifyOtpExpireAt:{
-        type: Number,
-        default: 0,
-    },
+    // ---------- Job Seeker profile ----------
+    phone: { type: String },
+    address: { type: String },
+    skills: [{ type: String }],
+    resumeUrl: { type: String }, // PDF path
 
-    isVerified:{
-        type: Boolean,
-        default: false,
-    },
+    // ---------- Employer profile ----------
+    companyName: { type: String },
+    companyDescription: { type: String },
+    companyWebsite: { type: String },
+    companyLocation: { type: String },
+  },
+  { timestamps: true }
+);
 
-    resetOtp:{
-        type: String,
-        default: ''
-    },
-
-    resetOtpExpireAt: {
-        type: Number,
-        default: 0,
-    },
-},
-    {timestamps : true}
-)
-
-const userModel = mongoose.model('users', userSchema);
-
+const userModel = mongoose.model("User", userSchema);
 export default userModel;
