@@ -1,5 +1,6 @@
 // Server/controller/jobController.js
 import Job from "../models/jobModel.js";
+import Application from "../models/applicationModel.js";
 
 // ===================== CREATE JOB =====================
 
@@ -107,3 +108,122 @@ export const getJobs = async (req, res) => {
     });
   }
 };
+
+export const applyJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const userId = req.user.id;
+
+    // prevent duplicate applications
+    const alreadyApplied = await Application.findOne({
+      job: jobId,
+      applicant: userId,
+    });
+
+    if (alreadyApplied) {
+      return res.status(400).json({
+        success: false,
+        message: "Already applied to this job",
+      });
+    }
+
+    const application = await Application.create({
+      job: jobId,
+      applicant: userId,
+    });
+    res.json({
+      success: true,
+      message: "Applied successfully",
+      application,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Application failed",
+    });
+  }
+};
+export const getAppliedJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({
+      applicants: req.user.id,
+    });
+
+    res.json({
+      success: true,
+      jobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch applied jobs",
+    });
+  }
+};
+// GET jobs created by logged-in user
+export const getMyJobs = async (req, res) => {
+  try {
+    const jobs = await Job.find({ createdBy: req.user.id });
+
+    res.json({
+      success: true,
+      jobs,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch jobs",
+    });
+  }
+};
+// GET single job details
+export const getJobById = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+
+    if (!job)
+      return res.json({ success: false, message: "Job not found" });
+
+    res.json({ success: true, job });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// GET applicants for a job
+export const getApplicants = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+
+    const applications = await Application.find({ job: jobId })
+      .populate("applicant", "name email");
+
+    res.json({
+      success: true,
+      applications,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch applicants",
+    });
+  }
+};
+// export const updateJob = async (req, res) => {
+//   try {
+//     const jobId = req.params.id;
+
+//     const updated = await Job.findByIdAndUpdate(
+//       jobId,
+//       req.body,
+//       { new: true }
+//     );
+
+//     res.json({ success: true, job: updated });
+//   } catch (err) {
+//     res.json({ success: false, message: "Update failed" });
+//   }
+// };
+
+

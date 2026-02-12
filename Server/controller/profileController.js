@@ -1,57 +1,64 @@
 // Server/controller/profileController.js
-import userModel from "../models/userModel.js";
+import User from "../models/userModel.js";
 
+// GET PROFILE
 export const getProfile = async (req, res) => {
   try {
-    const user = await userModel
-      .findById(req.user.id)
-      .select("-password");
+    const user = await User.findById(req.user.id).select("-password");
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
-    res.json({ success: true, user });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+    res.json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Profile fetch failed",
+      error: error.message,
+    });
   }
 };
 
+// UPDATE PROFILE
 export const updateProfile = async (req, res) => {
   try {
-    const updates = req.body;
-
-    const user = await userModel
-      .findByIdAndUpdate(req.user.id, updates, { new: true })
-      .select("-password");
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      req.body,
+      { new: true }
+    ).select("-password");
 
     res.json({
       success: true,
       message: "Profile updated successfully",
-      user,
+      user: updatedUser,
     });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Profile update failed",
+      error: error.message,
+    });
   }
 };
 
+// UPLOAD RESUME PATH
 export const saveResumePath = async (req, res) => {
   try {
     const resumeUrl = `/uploads/resumes/${req.file.filename}`;
 
-    const user = await userModel
-      .findByIdAndUpdate(
-        req.user.id,
-        { resumeUrl },
-        { new: true }
-      )
-      .select("-password");
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { resumeUrl },
+      { new: true }
+    ).select("-password");
 
     res.json({
       success: true,
@@ -59,9 +66,11 @@ export const saveResumePath = async (req, res) => {
       resumeUrl,
       user,
     });
-  } catch (err) {
-    res
-      .status(500)
-      .json({ success: false, message: "Server error", error: err.message });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Resume upload failed",
+      error: error.message,
+    });
   }
 };

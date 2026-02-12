@@ -6,7 +6,9 @@ import connectDB from "./config/mongodb.js";
 import authRouter from "./routes/authRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
-import path from "path";
+// import path from "path";
+// import profileRoutes from "./routes/profileRoutes.js";
+
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -27,6 +29,7 @@ app.get('/', (req, res) => { return res.json({success: true, message: "API is Wo
 app.use('/api/auth', authRouter);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/profile", profileRoutes);
+// app.use("/api/profile", profileRoutes);
 
 
 app.listen(port, () => { console.log(`Server running on port ${port}`) });

@@ -1,13 +1,21 @@
 // src/frontend/login.jsx
-import React, { useState } from "react";
+import React, { useState,useEffect  } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
+
+
+
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  
   const navigate = useNavigate();
-
+useEffect(() => {
+  if (document.cookie.includes("token")) {
+    navigate("/jobs");
+  }
+}, [navigate]);
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -20,14 +28,16 @@ const Login = () => {
       setError("Please fill in all fields.");
       return;
     }
+   
+    
 
     setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
+      const res = await fetch("http://localhost:4000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // so JWT cookie is stored
+        credentials: "include", 
         body: JSON.stringify(form),
       });
 
@@ -35,15 +45,11 @@ const Login = () => {
       console.log("Login result:", data);
 
       if (!data.success) {
-        // message comes from your backend (Invalid Password, User not Exist, etc.)
         setError(data.message || "Login failed.");
         return;
       }
-
-      // ✅ success
-      alert("Logged in successfully!");
-      // later we can navigate to /dashboard – for now stay on home
-      navigate("/");
+      
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
       setError("Network error. Please try again.");
